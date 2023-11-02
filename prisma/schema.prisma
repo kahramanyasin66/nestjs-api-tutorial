@@ -10,15 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User { // bir user birden fazla bookmark'a sahip olabilir
+model User {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  email     String @unique
-  hash      String
+
+  email String @unique
+  hash  String
+
   firstName String?
   lastName  String?
-  
+
   bookmarks Bookmark[]
 
   @@map("users")
@@ -28,16 +30,17 @@ model Bookmark {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  title String
-  descriptions String? 
-  link String  
 
+  title       String
+  description String?
+  link        String
 
-  userId Int 
-  user User @relation(fields: [userId], references: [id])
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 
   @@map("bookmarks")
 }
+
 // Veri taşıma işi burada olacaktır
 // npx prisma --help yazıp tüm komutlarını görebilirsin 
 // npx prisma stduio ve npx prisma migrate dev  -> veritabanına entegre etmeye yarıyor    
