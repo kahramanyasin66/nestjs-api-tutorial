@@ -14,7 +14,7 @@ export class JwtStrategy extends PassportStrategy(
 ) {
   constructor(
     config: ConfigService,
-    private prisma: PrismaService,
+    private prismaService: PrismaService,
   ) {
     super({
       jwtFromRequest:
@@ -28,7 +28,7 @@ export class JwtStrategy extends PassportStrategy(
     email: string;
   }) {
     const user =
-      await this.prisma.user.findUnique({
+      await this.prismaService.user.findUnique({
         where: {
           id: payload.sub,
         },
