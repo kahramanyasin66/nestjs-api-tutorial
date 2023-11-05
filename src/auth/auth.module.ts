@@ -7,9 +7,9 @@ import { JwtStrategy } from "./strategy";
 @Module({
     imports: [JwtModule.register({})],
     controllers: [AuthController],
-    providers: [AuthService,JwtStrategy],
-}) // {} object olduğunu gösterdik
-export class AuthModule {  //export yazarak nu sınıfınn sadece bu module içinde kullanılabileceğini söyledik    
+    providers: [AuthService, JwtStrategy],
+})
+export class AuthModule {
 
 }
 

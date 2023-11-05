@@ -12,6 +12,7 @@
     "db:dev:restart": "npm run db:dev:rm && npm run db:dev:up && timeout /t 1 > nul && npm run prisma:dev:deploy",
     "build": "nest build",
     "create-module": "nest g module bookmark",
+    "create-controller": "nest g controller user --no-spec",
     "start:dev": "nodemon --exec ts-node src/main.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

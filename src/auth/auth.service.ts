@@ -1,11 +1,10 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
-import { User, Bookmark } from "@prisma/client";
-import { AuthDto } from "src/auth/dto";
-import { PrismaService } from "../prisma/prisma.service";
+import { ForbiddenException, Injectable, } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { AuthDto } from './dto';
 import * as argon from 'argon2';
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { JwtService } from "@nestjs/jwt/dist";
-import { ConfigService } from "@nestjs/config/dist/config.service";
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable({})
 export class AuthService {
@@ -26,18 +25,19 @@ export class AuthService {
                     email: dto.email,
                     hash,
                     firstName: dto.firstName,
-                    lastName: dto.lastName
+                    lastName: dto.lastName,
                 },
                 select: {
                     id: true,
                     firstName: true,
                     lastName: true,
-                    createdAt: true
+                    createdAt: true,
+                    email:true,
                 }
             });
-            delete user.createdAt; // görünmesini istemediğimiz değerler için normalde hash olacak
+           //  delete user.createdAt; // görünmesini istemediğimiz değerler için normalde hash olacak
             // return the saved user
-            return user;
+            return this.signToken(user.id, user.email);
         }
         catch (error) {
             if (error instanceof PrismaClientKnownRequestError) {
@@ -51,7 +51,7 @@ export class AuthService {
 
     }
 
-    async login(dto: AuthDto) {
+    async signin(dto: AuthDto) {
         // find the user by email  // böyle bir email'e sahip user var mı? 
         const user = await this.prismaService.user.findUnique({
             where: {
@@ -81,15 +81,17 @@ export class AuthService {
         return this.signToken(user.id, user.email);
     }
 
-    async signToken(userId: number, email: string): Promise<{ access_token: string }> {
+    async signToken(userId: number, email: string,): Promise<{ access_token: string }> {
 
-        const payload = { sub: userId, email };
+        const payload = { sub: userId, email, };
 
         const secret = this.configService.get('JWT_SECRET');
 
-        const token = await this.jwtService.signAsync(payload, { expiresIn: '15m', secret: secret });
+        const token = await this.jwtService.signAsync(payload, { expiresIn: '15m', secret: secret, },);
 
-        return { access_token: token };
+        return { access_token: token, };
     }
+
+
 
 }
